@@ -1,0 +1,78 @@
+/**/
+body{
+    margin: 0px;
+    font-family: "Roboto";
+}
+/**/
+.home{
+    background-color: #0b0b0b;
+}
+/**/
+.navbar{
+    width: 100%;
+    color: white;
+    position: fixed;
+    top: 0;
+    padding: 10px;
+    z-index: 1000;
+    background: linear-gradient(to top, transparent 0%, rgb(0,0,0,0.3) 50%);
+}
+.navbar.scrolled{
+    background-color: #0b0b0b;
+}
+/**/
+.container{
+    padding: 0px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+/**/
+.left{
+    display: flex;
+    align-items: center;
+}
+/**/
+.left span{
+    margin-right: 30px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+/**/
+.left img{ 
+    height: 30px;
+    margin-right: 30px;
+}
+/**/
+.right{
+    display: flex;
+    align-items: center;
+}
+/**/
+.right img{
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    object-fit: cover;   
+}
+/**/
+.icon{
+    margin: 0px 15px;
+    cursor: pointer;
+}
+/* options inside dropdown */
+.options{
+    display: none;
+    background-color: #0b0b0b;
+    border-radius: 5px;
+}
+/* each option inside dropdown */
+.options span{
+    padding: 5px;
+}
+/* options when mouse is hovered over profile cotainer */
+.profile:hover .options{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+}
