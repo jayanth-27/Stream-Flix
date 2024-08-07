@@ -2,25 +2,6 @@ import React, { useState } from 'react';
 import './login.css';
 
 export default function Register() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPasswordInput, setShowPasswordInput] = useState(false);
-
-  function handleEmail(event) {
-    setEmail(event.target.value);
-  }
-
-  function handlePassword(event) {
-    setPassword(event.target.value);
-  }
-
-  function handleFinish(event) {
-    event.preventDefault(); // Prevent form submission
-    if (email) {
-      setShowPasswordInput(true);
-    }
-  }
-
   return (
       <div className="loggIn">
         <div className="top">
