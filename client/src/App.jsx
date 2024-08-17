@@ -5,23 +5,38 @@ import Register from "./pages/register/Register";
 import Login from "./pages/login/Login"
 import {
   BrowserRouter as Router,
-  Switch,
   Route,
-  Link
+  Routes,
+  Navigate
 } from "react-router-dom";
+
 function App()
 {
+  const user=false;
   return (
-  <Router>
-    <Switch>
-      <Route exact path="/">
-        <Home />
-      </Route>
-      <Route path="/movies">
-        < Home />
-      </Route>
-    </Switch>
-  </Router>
+    <Router>
+      <Routes>
+        <Route exact path="/" element={user ? <Home /> : <Navigate to="/register"/>}/>
+      </Routes>
+      <Routes>
+        <Route path="/register" element={!user ? <Register /> : <Navigate to="/"/>}/>
+      </Routes>
+      <Routes>
+        <Route path="/login" element={!user ? <Login /> : <Navigate to="/"/>}/>
+      </Routes>
+      {user && (<>
+        <Routes>
+          <Route path="/movies" element={<Home type="movies" />}/>
+        </Routes>
+        <Routes>
+          <Route path="/series" element={<Home type="series" />}/>
+        </Routes>
+        <Routes>
+          <Route path="/watch" element={<Watch />}/>
+        </Routes>
+      </>)
+      }
+    </Router>
   );
 }
 
