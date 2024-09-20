@@ -1,37 +1,71 @@
-import "./listItem.css"
-import React, { Fragment, useState } from 'react'
+import "./listItem.css";
+import React, { Fragment, useState, useEffect } from 'react';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import ThumbUpOffAltOutlinedIcon from '@mui/icons-material/ThumbUpOffAltOutlined';
+import axios from "axios";
 
-export default function ListItem() {
-  const [isHovered,setIsHovered]=useState(false);
+export default function ListItem(props) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [movie, setMovie] = useState({});
+
+  // Fetch movie details on component mount or when props.item changes
+  useEffect(() => {
+    const getMovies = async () => {
+      if (props.item) {
+        try {
+          const res = await axios.get(`/api/movie/find/${props.item}`, {
+            headers: {
+              token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZWQ5OTlmNDRmYzVlZTAyZTI1YzY5MSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTcyNjg0ODYzMiwiZXhwIjoxNzI3NDUzNDMyfQ.jhlikWH5f1cI0pETn40FyYB8J0--jT5NTzEIkt9LJ5o",  // Ensure the token is up-to-date
+            },
+          });
+          setMovie(res.data);
+        } catch (err) {
+          console.error("Failed to fetch movie data:", err);
+        }
+      }
+    };
+    getMovies();
+  }, [props.item]);
+
   return (
-    <div className="listItem" onMouseEnter={()=>setIsHovered(true)}
-    onMouseLeave={()=>setIsHovered(false)}>
-      <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=1200,height=675/catalog/crunchyroll/36bdc5ea4443cd8e42f22ec7d3884cbb.jpe"></img>
-      {isHovered && (
+    <div 
+      className="listItem" 
+      onMouseEnter={() => setIsHovered(true)} 
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <img src={movie.img} alt={movie.title || "Movie Thumbnail"} />
+      
+      {isHovered && movie.trailer && (
         <Fragment>
-          <iframe src="https://vlipsy.com/embed/GqVeQWBW" frameborder="0"></iframe>
-        <div className="itemInfo">
-          <div className="icons">
-            <PlayCircleIcon/>
-            <AddCircleOutlineRoundedIcon/>
-            <CancelOutlinedIcon/>
-            <ThumbUpOffAltOutlinedIcon/>
+          <iframe 
+            src={movie.trailer}
+            title={movie.title || "Movie Trailer"}
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            frameBorder="0"
+          ></iframe>
+          
+          <div className="itemInfo">
+            <div className="icons">
+              <PlayCircleIcon />
+              <AddCircleOutlineRoundedIcon />
+              <CancelOutlinedIcon />
+              <ThumbUpOffAltOutlinedIcon />
+            </div>
+            <div className="iteminfoTop">
+              <span>{movie.year}</span>
+              <span>+{movie.limit}</span>
+              {movie.isSeries && <span>10 seasons</span>}
+            </div>
+            <div className="itemdesc">
+              {movie.desc}
+            </div>
+            <div className="genre">{movie.genre || "Unknown Genre"}</div>
           </div>
-        <div className="iteminfoTop">
-          <span>TV-14</span>
-          <span>10 seasons</span>
-        </div>
-        <div className="itemdesc">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium sit quisquam aliquid exercitationem excepturi aspernatur, quidem ullam provident, nesciunt, quae placeat dolores officiis magnam tempora? Quo itaque molestias assumenda distinctio.
-        </div>
-        <div className="genre">Anime</div>
-      </div>
         </Fragment>
       )}
     </div>
-  )
+  );
 }
