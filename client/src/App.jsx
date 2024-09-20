@@ -26,10 +26,10 @@ function App()
       </Routes>
       {user && (<>
         <Routes>
-          <Route path="/movies" element={<Home type="movies" />}/>
+          <Route path="/movies" element={<Home type="Movies" />}/>
         </Routes>
         <Routes>
-          <Route path="/series" element={<Home type="series" />}/>
+          <Route path="/series" element={<Home type="Series" />}/>
         </Routes>
         <Routes>
           <Route path="/watch" element={<Watch />}/>

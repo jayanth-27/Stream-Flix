@@ -1,7 +1,8 @@
 const router = require("express").Router();
-const User= require('../models/User');
+const User = require('../models/User');
 const CryptoJS = require("crypto-js");
-const jwt =require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
+
 //User Registration
 router.post("/register", async (req, res) => {
     try {
@@ -19,26 +20,37 @@ router.post("/register", async (req, res) => {
 });
 
 //Login
-router.post("/login", async (req,res) =>{
-    try{
-        const savedUser = await User.findOne({email: req.body.email});
-        !savedUser && res.status(404).json("Wrong Username or Password");
+router.post("/login", async (req, res) => {
+    try {
+        // Check if user exists
+        const savedUser = await User.findOne({ email: req.body.email });
+        if (!savedUser) {
+            return res.status(404).json("Wrong Username or Password");
+        }
 
         // Decrypt password
-        const bytes  = CryptoJS.AES.decrypt(savedUser.password, process.env.SECRET_KEY);
+        const bytes = CryptoJS.AES.decrypt(savedUser.password, process.env.SECRET_KEY);
         const originalPassword = bytes.toString(CryptoJS.enc.Utf8);
 
-        (originalPassword !== req.body.password) && res.status(404).json("Wrong Username or Password");
-        
-        //create a web token before sending any info
-        const accessToken = jwt.sign({id: savedUser._id, isAdmin:savedUser.isAdmin},process.env.SECRET_KEY,{expiresIn:"7d"});
-        //for not sending password back when details are requested we use destructing
-        const{password, ...info}=savedUser._doc;
-        res.status(200).json({...info,accessToken});
-    }catch(err)
-    {
-        res.status(201).json(err);
+        // Compare passwords
+        if (originalPassword !== req.body.password) {
+            return res.status(404).json("Wrong Username or Password");
+        }
+
+        // Create JWT token
+        const accessToken = jwt.sign(
+            { id: savedUser._id, isAdmin: savedUser.isAdmin },
+            process.env.SECRET_KEY,
+            { expiresIn: "7d" }
+        );
+
+        // Destructure user object to exclude password
+        const { password, ...info } = savedUser._doc;
+        res.status(200).json({ ...info, accessToken });
+
+    } catch (err) {
+        res.status(500).json(err); // Changed to 500 for server error
     }
 });
 
-module.exports=router;
+module.exports = router;

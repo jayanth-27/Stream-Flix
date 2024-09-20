@@ -8,7 +8,7 @@ import { useRef } from "react";
 import { useState } from "react";
 import { style } from "@mui/system";
 
-export default function List() {
+export default function List(props) {
     const [slideNum,setSlideNum]=useState(0);
     const [isMoved,setIsMoved]=useState(false);
     const listRef=useRef(null);
@@ -37,23 +37,16 @@ export default function List() {
   return (
     <div className="list">
       <span className="listTitle">
-        Continue to watch
+        {props.listt.title}
       </span>
       <div className="wrapper">
         <div className="sliderArrow lefts" onClick={()=>handleClick("left")} style={{display: !isMoved && "none"}}>
          <ArrowBackIosIcon fontSize="large"/>
         </div>
         <div className="movies" ref={listRef}>
-            <ListItem/>
-            <ListItem/>
-            <ListItem/>
-            <ListItem/>
-            <ListItem/>
-            <ListItem/>
-            <ListItem/>
-            <ListItem/>
-            <ListItem/>
-            <ListItem/>
+        {props.listt.content.map((item, i)=>(
+            <ListItem index={i} item={item}/>
+          ))}
         </div>
         <div className="sliderArrow rights" onClick={()=>handleClick("right")}>
           <ArrowForwardIosIcon fontSize="large"/>
